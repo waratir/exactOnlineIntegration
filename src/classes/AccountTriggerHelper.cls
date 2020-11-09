@@ -7,6 +7,8 @@ public with sharing class AccountTriggerHelper {
         Boolean value = true;
         Id batchInstanceId = Database.executeBatch(new BatchSendAccountsToExactOnline(query, field, value));
         Account acc = [SELECT Name FROM Account];
+        Account acc1 = [SELECT Name FROM Account];
+        Account acc2 = [SELECT Name FROM Account];
     }
 
 }
