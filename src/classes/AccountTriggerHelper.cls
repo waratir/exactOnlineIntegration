@@ -6,6 +6,7 @@ public with sharing class AccountTriggerHelper {
         String field = 'Sent__c';
         Boolean value = true;
         Id batchInstanceId = Database.executeBatch(new BatchSendAccountsToExactOnline(query, field, value));
+        Account acc = [SELECT Name FROM Account];
     }
 
 }
