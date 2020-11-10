@@ -1,13 +1,11 @@
 
 public with sharing class BatchSendAccountsToExactOnline implements Database.Batchable<SObject>, Database.AllowsCallouts {
     public final String QUERY;
-    public final String FIELD;
-    public final Boolean VALUE;
+    public final String sObjectName;
 
-    public BatchSendAccountsToExactOnline (String q, String f, Boolean v){
-        this.QUERY = q;
-        this.FIELD = f;
-        this.VALUE = v;
+    public BatchSendAccountsToExactOnline (String query, String sObjectName){
+        this.QUERY = query;
+        this.sObjectName = sObjectName;
     }
 
     public Database.QueryLocator start(Database.BatchableContext bc) {
@@ -15,11 +13,22 @@ public with sharing class BatchSendAccountsToExactOnline implements Database.Bat
     }
     public void execute(Database.BatchableContext bc, List<SObject> records) {
         ConnectWithExactonline postRequest = new ConnectWithExactonline();
-        postRequest.postSObjectToExactOnline(records[0]);
-        for (SObject item: records){
-            item.put(FIELD, VALUE);
+        for (SObject obj: records){
+            switch on sObjectName {
+                when 'Account' {
+                    postRequest.postAccountToExactOnline((Account) obj);
+                }
+                when 'Case' {
+                    postRequest.postOrderToExactOnline((Order) obj);
+                }
+                when 'Subscription' {
+                    postRequest.postAccountToExactOnline((Account) obj);
+                }
+                when else {
+                    System.debug('null point Exception');
+                }
+            }
         }
-        update records;
     }
     public void finish(Database.BatchableContext bc) {
 
