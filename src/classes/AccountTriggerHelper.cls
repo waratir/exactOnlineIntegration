@@ -1,4 +1,3 @@
-
 public with sharing class AccountTriggerHelper {
 
     public static void sendDataToExactOnline(List<Account> records) {
